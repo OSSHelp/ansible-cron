@@ -1,0 +1,9 @@
+---
+
+- name: install
+  include_tasks: install.yml
+  when: cron_setup == "full" or cron_setup == "install"
+
+- name: configure
+  import_tasks: configure.yml
+  when: cron_setup == "full" or cron_setup == "configure"

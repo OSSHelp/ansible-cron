@@ -1,0 +1,12 @@
+---
+
+- name: install cron
+  apt:
+    name: cron
+    update_cache: true
+    cache_valid_time: 86400
+
+- name: check service
+  service:
+    name: cron
+    enabled: yes

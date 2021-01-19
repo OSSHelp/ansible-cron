@@ -1,0 +1,30 @@
+---
+- name: add PATH variable
+  cron:
+    user: "{{ item.user }}"
+    name: PATH
+    env: true
+    value: "{{ cron_path }}"
+
+- name: add MAILTO variable
+  cron:
+    user: "{{ item.user }}"
+    name: MAILTO
+    env: true
+    value: "{{ item.cron_mailto }}"
+    insertafter: PATH
+  when: not ansible_check_mode and item.cron_mailto is defined
+
+- name: create user jobs
+  cron:
+    name: "{{ item.name }}"
+    state: "{{ item.state|default('present') }}"
+    disabled: "{{ item.disabled|default('no') }}"
+    job: "{{ item.job }}"
+    user: "{{ item.user|default('root') }}"
+    minute: "{{ item.minute|default('*') }}"
+    hour: "{{ item.hour|default('*') }}"
+    day: "{{ item.day|default('*') }}"
+    month: "{{ item.month|default('*') }}"
+    weekday: "{{ item.weekday|default('*') }}"
+    special_time: "{{ item.special_time|default(omit) }}"

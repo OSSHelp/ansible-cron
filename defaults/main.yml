@@ -1,0 +1,4 @@
+---
+cron_path: "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
+cron_mailto: project-name-here@osshelp.pagerduty.com
+cron_setup: full

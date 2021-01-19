@@ -1,0 +1,39 @@
+---
+
+- name: create users jobs
+  include_tasks: users_jobs.yml
+  loop: "{{ cron_user_jobs|default('[]') }}"
+
+- name: add PATH variable (osshelp)
+  cron:
+    name: PATH
+    env: true
+    value: "{{ cron_path }}"
+    user: root
+    cron_file: osshelp
+
+- name: add MAILTO variable (osshelp)
+  cron:
+    name: MAILTO
+    env: true
+    value: "{{ cron_mailto }}"
+    insertafter: PATH
+    user: root
+    cron_file: osshelp
+  when: not ansible_check_mode
+
+- name: create osshelp jobs
+  cron:
+    name: "{{ item.name }}"
+    state: "{{ item.state|default('present') }}"
+    disabled: "{{ item.disabled|default('no') }}"
+    user: "{{ item.user|default('root') }}"
+    minute: "{{ item.minute|default('*') }}"
+    hour: "{{ item.hour|default('*') }}"
+    day: "{{ item.day|default('*') }}"
+    month: "{{ item.month|default('*') }}"
+    weekday: "{{ item.weekday|default('*') }}"
+    special_time: "{{ item.special_time|default(omit) }}"
+    job: "{{ item.job }}"
+    cron_file: osshelp
+  loop: "{{ cron_osshelp_jobs|default('[]') }}"
