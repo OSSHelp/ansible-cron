@@ -1,5 +1,1 @@
 ---
-- name: cron reload
-  service:
-    name: cron
-    state: restarted

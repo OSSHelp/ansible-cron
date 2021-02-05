@@ -1,0 +1,28 @@
+---
+- name: cron restart
+  service:
+    name: cron
+    state: restarted
+  changed_when: false
+
+- name: get cron pid
+  command: pgrep cron
+  register: cron_pid
+  changed_when: false
+
+- name: search errors
+  shell: 'journalctl -u cron | grep "cron\[{{ cron_pid.stdout }}\]: Error"'
+  register: cron_syntax_check
+  ignore_errors: true
+  changed_when: false
+
+- name: show errors
+  debug:
+    msg: "{{ cron_syntax_check.stdout }}"
+  when: cron_syntax_check.rc == 0
+
+- name: Notify if bad syntax
+  assert:
+    that:
+      - cron_syntax_check.rc != 0
+    fail_msg: "Cron configuration check failed. You should check debug information above and fix the problem(s)."

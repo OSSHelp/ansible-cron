@@ -37,3 +37,7 @@
     job: "{{ item.job }}"
     cron_file: osshelp
   loop: "{{ cron_osshelp_jobs|default('[]') }}"
+
+- name: syntax check
+  include_tasks: syntax_check.yml
+  when: not ansible_check_mode
