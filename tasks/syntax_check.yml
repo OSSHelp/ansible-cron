@@ -6,7 +6,7 @@
   changed_when: false
 
 - name: get cron pid
-  command: pgrep cron
+  command: pgrep --parent 1 cron
   register: cron_pid
   changed_when: false
 
