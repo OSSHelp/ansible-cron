@@ -6,12 +6,12 @@
   changed_when: false
 
 - name: get cron pid
-  command: pgrep --parent 1 cron
+  command: systemctl show --property MainPID cron # noqa 303
   register: cron_pid
   changed_when: false
 
 - name: search for errors
-  shell: 'journalctl -u cron | grep "cron\[{{ cron_pid.stdout }}\]: Error"'
+  shell: 'journalctl -u cron -t cron | grep "cron\[{{ cron_pid.stdout.split("=")[1] }}\]: Error"'
   register: cron_syntax_check
   failed_when: cron_syntax_check.stderr | length > 0
   ignore_errors: true
